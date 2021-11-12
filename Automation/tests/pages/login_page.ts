@@ -1,4 +1,5 @@
 import { Selector, t } from "testcafe"
+import SecurePage from "./secure_page"
 
 class LoginPage {
     pre_login_header: Selector;
@@ -7,13 +8,11 @@ class LoginPage {
     username_field: Selector;
     password_field: Selector;
     login_button: Selector;
-    login_success_banner: Selector;
-    login_success_sub_header: Selector;
-    logout_button: Selector;
-    secure_area_header: Selector;
     logout_banner: Selector;
     login_failed_banner_username: Selector;
     login_failed_banner_password: Selector;
+    must_login_banner: Selector;
+    secure_page: SecurePage;
 
     constructor() {
         this.pre_login_header = Selector("h2").withText("Login Page");
@@ -22,13 +21,19 @@ class LoginPage {
         this.username_field = Selector("input#username");
         this.password_field = Selector("input#password");
         this.login_button = this.login_form.find("button[type='submit']");
-        this.login_success_banner = Selector("div#flash").withText("You logged into a secure area");
-        this.login_success_sub_header = Selector("h4.subheader").withText("Welcome to the Secure Area");
-        this.logout_button = Selector("a.button[href='/logout']");
-        this.secure_area_header = Selector("h2").withText("Secure Area");
         this.logout_banner = Selector("div#flash").withText("You logged out of the secure area");
-        this.login_failed_banner_username = Selector("div#flash").withText("Your username is invalid")
-        this.login_failed_banner_password = Selector("div#flash").withText("Your password is invalid")
+        this.login_failed_banner_username = Selector("div#flash.error").withText("Your username is invalid");
+        this.login_failed_banner_password = Selector("div#flash.error").withText("Your password is invalid");
+        this.must_login_banner = Selector("div#flash.error").withText("You must login to view the secure area");
+        this.secure_page = new SecurePage();
+    }
+
+    async validate_login_page() {
+        await t.expect(this.pre_login_header.exists).ok("Login page header does not exist");
+        await t.expect(this.pre_login_sub_header.exists).ok("Login page sub header does not exist");
+        await t.expect(this.username_field.exists).ok("Username field does not exist");
+        await t.expect(this.password_field.exists).ok("Username field does not exist");
+        await t.expect(this.login_button.exists).ok("Login button does not exist");
     }
 
     /**
@@ -50,19 +55,19 @@ class LoginPage {
     }
 
     async login_success(username: string, password: string) {
-        await this.login(username, password, this.login_success_banner);
+        await this.login(username, password, this.secure_page.login_success_banner);
     }
 
     async login_fail_username(username: string, password: string) {
-        await this.login(username, password, this.login_failed_banner_username, this.login_success_banner);
+        await this.login(username, password, this.login_failed_banner_username, this.secure_page.login_success_banner);
     }
 
     async login_fail_password(username: string, password: string) {
-        await this.login(username, password, this.login_failed_banner_password, this.login_success_banner);
+        await this.login(username, password, this.login_failed_banner_password, this.secure_page.login_success_banner);
     }
 
     async login_fail_password_username(username: string, password: string) {
-        await this.login(username, password, this.login_failed_banner_username, this.login_success_banner);
+        await this.login(username, password, this.login_failed_banner_username, this.secure_page.login_success_banner);
     }
 }
 

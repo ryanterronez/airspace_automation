@@ -1,8 +1,9 @@
 import { Selector, Role, t } from "testcafe";
 import login_page from "../pages/login_page"
 
-const details = {
+export const details = {
     login_url: "https://the-internet.herokuapp.com/login",
+    logged_in_url: "https://the-internet.herokuapp.com/secure",
     username: "tomsmith",
     password: "SuperSecretPassword!"
 };
