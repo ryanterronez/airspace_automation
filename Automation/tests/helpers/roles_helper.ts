@@ -9,7 +9,7 @@ const details = {
 export const ValidUser = Role (
     `${details.login_url}`,
     async (t) => {
-        await login_page.login_success("tomsmiths", details.password)
+        await login_page.login_success("tomsmith", details.password)
     },
     { preserveUrl: true }
 );
