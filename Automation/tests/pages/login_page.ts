@@ -31,33 +31,39 @@ class LoginPage {
         this.login_failed_banner_password = Selector("div#flash").withText("Your password is invalid")
     }
 
-    async login_success(username: string, password: string) {
+    /**
+    attemps to login user
+    * @param {string} username
+    * @param {string} password
+    * @param {Selector} expected_banner
+    * @param {Selector} unexpected_banner
+     */
+    async login(username: string, password: string, expected_banner: Selector, unexpected_banner?: Selector) {
         await t.expect(this.login_form.exists).ok("Login form does not exist");
         await t.typeText(this.username_field, username);
         await t.typeText(this.password_field, password);
         await t.click(this.login_button);
-        await t.expect(this.login_success_banner.exists).ok("Login success banner not present");
+        if (unexpected_banner) {
+            await t.expect(unexpected_banner.exists).notOk(`${unexpected_banner} shoud not be present`);
+        }
+        await t.expect(expected_banner.exists).ok(`${expected_banner} not present`);
+    }
+
+    async login_success(username: string, password: string) {
+        await this.login(username, password, this.login_success_banner);
     }
 
     async login_fail_username(username: string, password: string) {
-        await t.expect(this.login_form.exists).ok("Login form does not exist");
-        await t.typeText(this.username_field, username);
-        await t.typeText(this.password_field, password);
-        await t.click(this.login_button);
-        await t.expect(this.login_success_banner.exists).notOk("Login success banner should not be present");
-        await t.expect(this.login_failed_banner_username.exists).ok("Login failed (username) banner not present")
+        await this.login(username, password, this.login_failed_banner_username, this.login_success_banner);
     }
 
     async login_fail_password(username: string, password: string) {
-        await t.expect(this.login_form.exists).ok("Login form does not exist");
-        await t.typeText(this.username_field, username);
-        await t.typeText(this.password_field, password);
-        await t.click(this.login_button);
-        await t.expect(this.login_success_banner.exists).notOk("Login success banner should not be present");
-        await t.expect(this.login_failed_banner_password.exists).ok("Login failed (password) banner not present")
+        await this.login(username, password, this.login_failed_banner_password, this.login_success_banner);
     }
 
-
+    async login_fail_password_username(username: string, password: string) {
+        await this.login(username, password, this.login_failed_banner_username, this.login_success_banner);
+    }
 }
 
 export default new LoginPage();

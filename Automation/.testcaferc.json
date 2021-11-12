@@ -9,5 +9,5 @@
     "assertionTimeout": 10000,
     "pageLoadTimeout": 10000,
     "selectorTimeout": 10000,
-    "pageRequestTimeout": 10000,
+    "pageRequestTimeout": 10000
   }
