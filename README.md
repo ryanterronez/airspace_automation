@@ -6,5 +6,5 @@ To run testcases:
 
 cd to Automation directory
 
-npx testcafe chrome .\Automation\tests\
+npx testcafe chrome .\tests\
 
