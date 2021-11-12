@@ -1,5 +1,7 @@
-Run npm install
+Run:
+
+npm install
 
 To run testcases:
-npx testcafe chrome
+npx testcafe chrome .\Automation\tests\
 
